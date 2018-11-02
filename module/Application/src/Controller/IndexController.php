@@ -15,6 +15,13 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        if($this->getRequest()->isPost()){
+            echo __FILE__."<hr /><pre>";
+            print_r('d');
+            die();
+            
+        }
+
         return new ViewModel();
     }
 }
