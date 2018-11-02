@@ -1,0 +1,56 @@
+<?php if ($this->pageCount): ?>
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <!-- Previous page link -->
+            <?php if (isset($this->previous))
+            {
+                echo pageBilder($this->url($this->route), $this->previous, "<<");
+            }else{
+                echo pageBilder($this->url($this->route), $this->previous, "<<", "disabled");
+            }
+            ?>
+            <!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <?php if ($page != $this->current)
+                {
+                    echo pageBilder($this->url($this->route), $page, $page);
+                }
+                else
+                {
+                    echo pageBilder($this->url($this->route), $page, $page, "active");
+                }
+                ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php
+                if (isset($this->next))
+                {
+                    echo pageBilder($this->url($this->route), $this->next,  ">>");
+                }else{
+                    echo pageBilder($this->url($this->route), $this->next, ">>", "disabled");
+                }
+            ?>
+        </ul>
+    </nav>
+<?php endif;
+
+
+function pageBilder($url, $page, $icon, $priznak = '')
+{
+    //$priznak = active, disabled
+
+    $get = $_GET;
+    unset($get['page']);
+    $params = http_build_query($get);
+    $bild = "
+    <li class='page-item $priznak'>
+        <a class='page-link' href='{$url}?page={$page}&{$params}'>
+            {$icon}
+        </a>
+    </li>";
+
+    return $bild;
+}
+
+?>
