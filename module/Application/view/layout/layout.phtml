@@ -52,12 +52,30 @@
         </div>
         <script>
             $(function(){
-                $( "#formgenerate" ).on( "submit", function( event ) {
+
+                var form = {
+                    body: $( "#formgenerate" ),
+                    button: $( "#buttongenerate" ),
+                    input: $( "#inputsource" )
+                };
+
+                var label = {
+                    gener: "Generate",
+                    clear: "Clear"
+                };
+
+                form.input.keyup( function(){
+                    if(form.button.text() == label.clear) {
+                        form.button.text(label.gener);
+                    }
+                });
+                
+                form.body.on( "submit", function( event ) {
                     event.preventDefault();
 
-                    if($("#buttongenerate" ).text() == 'clear'){
-                        $( "#inputsource" ).val("");
-                        $("#buttongenerate" ).text("Generate");
+                    if(form.button.text() == label.clear){
+                        form.input.val("");
+                        form.button.text(label.gener);
                     }else{
                         $.ajax({
                             type: "POST",
@@ -66,8 +84,8 @@
                             async: false,
                             data: $( this ).serialize(),
                             success: function(success){
-                                $( "#inputsource" ).val(success);
-                                $( "#buttongenerate" ).text('clear');
+                                form.input.val(success);
+                                form.button.text(label.clear);
                             }
                         }).done(function(){
                             var copyText = document.getElementById("inputsource");
