@@ -30,12 +30,13 @@ class IndexController extends AbstractActionController
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $r = $statement->execute();
-
         return $r->current();
     }
 
     private function getNewLinck(string $source): string
     {
+        $source = urlencode($source);
+
         $new_link = substr(md5($source.$this->salt), 0, $this->limit);
         $checkExistsLink = $this->getLink($new_link);
         
@@ -76,11 +77,12 @@ class IndexController extends AbstractActionController
         if ($this->getRequest()->isGet() && !empty($id)) {
             $source = $this->getLink($id)['source'];
             if(!empty($source)){
-                header('Location: '.$source);
+                header('Location: '.urldecode($source));
             }
         }
 
         if ($this->getRequest()->isPost()) {
+            $newLink = '';
             try {
                 $source = $this->params()->fromPost('source');
                 if (filter_var($source, FILTER_VALIDATE_URL) && !preg_match("/(http|https):\/\/igp.pw.*/x", $source)) {
@@ -89,12 +91,11 @@ class IndexController extends AbstractActionController
                 }else{
                     $newLink = "Некорректные данные";
                 }
-//                echo "<h3>{$host}{$newLink}</h3>";
             } catch (\Exception $e) {
-//                echo __FILE__ . "<hr /><pre>";
-//                print_r($e->getMessage());
-//                die();
+
             }
+            echo $newLink;
+            die();
         }
 
         $this->layout()->setVariable("newlink", $newLink ?? '');

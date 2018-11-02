@@ -13,19 +13,19 @@
             ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
         ?>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+        <link href="/static/style/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="stylesheet" href="/static/style/all.css"
               integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="/static/javascript/jquery.min.js"></script>
+        <script src="/static/javascript/bootstrap.min.js"></script>
     </head>
     <body>
         <div class="container">
             <br/>
             <div class="row justify-content-center">
                 <div style="margin-top: 10%" class="col-12 col-md-10 col-lg-8">
-                    <form class="card card-sm" method="post">
+                    <form id="formgenerate" class="card card-sm" method="post">
 
                         <?php if(!empty($newlink)): ?>
                             <div class="input-group card-body row no-gutters align-items-center">
@@ -35,13 +35,13 @@
                         <div class="input-group card-body row no-gutters align-items-center">
                             <!--end of col-->
                             <div class="col">
-                                <input class="form-control form-control-lg form-control-borderless" type="text"
+                                <input id="inputsource" class="form-control form-control-lg form-control-borderless" type="text"
                                        style="border-top-right-radius: 0px; border-bottom-right-radius: 0px" name="source"
                                        placeholder="Enter URL">
                             </div>
                             <!--end of col-->
                             <div class="input-group-append col-auto">
-                                <button class="btn btn-lg btn-success" type="submit">Generate</button>
+                                <button id="buttongenerate" class="btn btn-lg btn-success" type="submit">Generate</button>
                             </div>
                             <!--end of col-->
                         </div>
@@ -50,5 +50,41 @@
                 <!--end of col-->
             </div>
         </div>
+        <script>
+            $(function(){
+                $( "#formgenerate" ).on( "submit", function( event ) {
+                    event.preventDefault();
+
+                    if($("#buttongenerate" ).text() == 'clear'){
+                        $( "#inputsource" ).val("");
+                        $("#buttongenerate" ).text("Generate");
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: '/',
+                            cache: false,
+                            async: false,
+                            data: $( this ).serialize(),
+                            success: function(success){
+                                $( "#inputsource" ).val(success);
+                                $( "#buttongenerate" ).text('clear');
+                            }
+                        }).done(function(){
+                            var copyText = document.getElementById("inputsource");
+                            /* Select the text field */
+                            copyText.select();
+                            /* Copy the text inside the text field */
+                            document.execCommand("copy");
+                            /* Alert the copied text */
+                            alert("Copied the text: " + copyText.value);
+                        });
+                    }
+
+                });
+
+
+            });
+
+        </script>
     </body>
 </html>
