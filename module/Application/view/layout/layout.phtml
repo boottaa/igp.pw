@@ -1,47 +1,55 @@
 <!doctype html>
 <html lang="ru">
-<head>
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
 
-    <?=
-	$this->headTitle('Aid - Project')->setSeparator(' - ')->setAutoEscape(false);
-//		$this->headMeta()
-//		->appendName('viewport', 'width=device-width, initial-scale=1.0')
-//		->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
-//		->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        <?=
+        $this->headTitle('IGP - Image generate pro')->setSeparator(' - ')->setAutoEscape(false);
+        $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+              integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
-//		$this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath('/shop/img/favicon.png')])
-//			->prependStylesheet($this->basePath('/statics/bootstrap-4.0.0/dist/css/bootstrap.css'))
-//		->prependStylesheet($this->basePath('shop/css/bootstrap.css'))
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <br/>
+            <div class="row justify-content-center">
+                <div style="margin-top: 10%" class="col-12 col-md-10 col-lg-8">
+                    <form class="card card-sm" method="post">
 
-//      $this->headScript()
-//		->prependFile($this->basePath('shop/js/bootstrap.bundle.js'))
-//		->prependFile($this->basePath('shop/js/bootstrap.js'))
-//		->prependFile($this->basePath('shop/js/jquery.mask.js'))
-//		->prependFile($this->basePath('shop/js/chart.js/Chart.js'))
-//		->prependFile($this->basePath('shop/js/chart.js/Chart.bundle.js'))
-//		->prependFile($this->basePath('shop/js/jquery-3.1.0.min.js'))
-	?>
-	<!-- Bootstrap core CSS -->
-	<link href="/statics/aidview/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<!-- Custom fonts for this template -->
-	<link href="/statics/aidview/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-	<link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-	<!-- Plugin CSS -->
-	<link href="/statics/aidview/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
-	<!-- Custom styles for this template -->
-	<link href="/statics/aidview/css/freelancer.min.css" rel="stylesheet">
-</head>
-
-<body>
-    <form method="post">
-        <input style="margin: 20px" type="text" name="source" placeholder="enter source link">
-        <input type="submit" value="generate">
-    </form>
-</body>
-
+                        <?php if(!empty($newlink)): ?>
+                            <div class="input-group card-body row no-gutters align-items-center">
+                                <?=$newlink ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="input-group card-body row no-gutters align-items-center">
+                            <!--end of col-->
+                            <div class="col">
+                                <input class="form-control form-control-lg form-control-borderless" type="text"
+                                       style="border-top-right-radius: 0px; border-bottom-right-radius: 0px" name="source"
+                                       placeholder="Enter URL">
+                            </div>
+                            <!--end of col-->
+                            <div class="input-group-append col-auto">
+                                <button class="btn btn-lg btn-success" type="submit">Generate</button>
+                            </div>
+                            <!--end of col-->
+                        </div>
+                    </form>
+                </div>
+                <!--end of col-->
+            </div>
+        </div>
+    </body>
 </html>
+
