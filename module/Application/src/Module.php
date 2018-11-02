@@ -7,10 +7,11 @@
 
 namespace Application;
 
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Interop\Container\ContainerInterface;
+use Zend\Db\Adapter\AdapterInterface;
+use Zend\Db\Sql\Sql;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ServiceManager\ConfigInterface;
+
 
 class Module implements ConfigProviderInterface
 {
@@ -21,5 +22,19 @@ class Module implements ConfigProviderInterface
         return include __DIR__ . '/../config/module.config.php';
     }
 
-
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                Controller\IndexController::class => function ($container) {
+                    /**
+                     * @var  ContainerInterface $container
+                     */
+                    $adapter = $container->get(AdapterInterface::class);
+                    $sql = new Sql($adapter);
+                    return new Controller\IndexController($sql);
+                }
+            ]
+        ];
+    }
 }
