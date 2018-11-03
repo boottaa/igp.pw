@@ -24,6 +24,8 @@ class Module implements ConfigProviderInterface
 
     public function getControllerConfig()
     {
+        
+
         return [
             'factories' => [
                 Controller\IndexController::class => function ($container) {
@@ -33,6 +35,14 @@ class Module implements ConfigProviderInterface
                     $adapter = $container->get(AdapterInterface::class);
                     $sql = new Sql($adapter);
                     return new Controller\IndexController($sql);
+                },
+                Controller\AdminController::class => function ($container) {
+                    /**
+                     * @var  ContainerInterface $container
+                     */
+                    $adapter = $container->get(AdapterInterface::class);
+                    $sql = new Sql($adapter);
+                    return new Controller\AdminController($sql);
                 }
             ]
         ];

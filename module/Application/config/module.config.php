@@ -9,6 +9,7 @@ namespace Application;
 
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
+use Zend\Router\Http\Method;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
 $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
@@ -25,6 +26,20 @@ return [
                     ],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/admin[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\AdminController::class,
                         'action'     => 'index',
                     ],
                 ],
