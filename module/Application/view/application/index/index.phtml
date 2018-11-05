@@ -1,1 +1,109 @@
-<h1>asdff</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form id="formgenerate" class="card card-sm" method="post">
+                <?php if(!empty($newlink)): ?>
+                    <div class="input-group card-body row no-gutters align-items-center">
+                        <?=$newlink ?>
+                    </div>
+                <?php endif; ?>
+                <div class="input-group card-body row no-gutters align-items-center">
+                    <!--end of col-->
+                    <div class="col">
+                        <input id="inputsource" class="form-control form-control-lg form-control-borderless" type="text"
+                               style="border-top-right-radius: 0px; border-bottom-right-radius: 0px" name="source"
+                               placeholder="Paste a link to shorten it">
+                    </div>
+                    <!--end of col-->
+                    <div class="input-group-append col-auto">
+                        <button id="buttongenerate" class="btn btn-lg btn-success" type="submit">Generate</button>
+                    </div>
+                    <!--end of col-->
+                </div>
+            </form>
+        </div>
+        <!--end of col-->
+    </div>
+</div>
+<script>
+    $(function(){
+
+        var form = {
+            body: $( "#formgenerate" ),
+            button: $( "#buttongenerate" ),
+            input: $( "#inputsource" )
+        };
+
+        var label = {
+            gener: "Generate",
+            clear: "Clear"
+        };
+
+        var action = {
+            clear: function(){
+                if(form.button.text() === label.clear) {
+                    form.input.val("");
+                    form.button.text(label.gener);
+                    form.button.addClass("btn-success");
+                    form.button.removeClass("btn-danger");
+
+                    return true;
+                }
+
+                return false;
+            },
+            gener: function( success ){
+                if(form.button.text() === label.gener) {
+                    form.input.val( success);
+                    form.button.text(label.clear);
+                    form.button.addClass("btn-danger");
+                    form.button.removeClass("btn-success");
+                }
+            }
+        };
+
+        form.input.keyup( function(){
+            action.clear();
+        });
+
+
+        var debug = true;
+        if ( !debug ) {
+            form.body.on( "submit", function( event ) {
+                event.preventDefault();
+
+                if(form.input.val() === ""){
+                    form.input.attr("placeholder", "https://exemple.com" + label.gener);
+
+                    return false;
+                }
+
+                if(!action.clear()){
+                    $.ajax({
+                        type: "POST",
+                        url: '/',
+                        cache: false,
+                        async: false,
+                        data: $( this ).serialize(),
+                        success: function( success ){
+                            form.input.val( success );
+                            form.button.text(label.clear);
+                            form.button.addClass("btn-danger");
+                            form.button.removeClass("btn-success");
+                        }
+                    }).done(function(){
+                        var copyText = document.getElementById("inputsource");
+                        /* Select the text field */
+                        copyText.select();
+                        /* Copy the text inside the text field */
+                        document.execCommand("copy");
+                        /* Alert the copied text */
+                        alert("Copied the text: " + copyText.value);
+                    });
+                }
+                return false;
+            });
+        }
+    });
+
+</script>

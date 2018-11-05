@@ -7,9 +7,8 @@
 
 namespace Application\Controller;
 
-use Zend\Db\Sql\Sql;
+use Application\Model\Base;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
@@ -18,25 +17,22 @@ class IndexController extends AbstractActionController
     private $salt = 0;
     private $limit = 2;
 
-    function __construct(Sql $sql)
+    function __construct(Base $sql)
     {
         $this->sql = $sql;
     }
 
     private function getLink($new){
-        $sql = $this->sql;
-        $select = $sql->select('links');
-        $select->where(['new' => $new]);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $r = $statement->execute();
-        return $r->current();
+        try{
+            return $this->sql->getOnly(['new' => $new]);
+        }catch (\Exception $e){
+            return null;
+        }
     }
 
     private function getNewLinck(string $source): string
     {
         $source = urlencode($source);
-
         $new_link = substr(md5($source.$this->salt), 0, $this->limit);
         $checkExistsLink = $this->getLink($new_link);
         
@@ -60,12 +56,7 @@ class IndexController extends AbstractActionController
             "new" => $new_link,
         ];
 
-        $sql = $this->sql;
-        $insert = $sql->insert('links');
-        $insert->values($data);
-
-        $statement = $sql->prepareStatementForSqlObject($insert);
-        $statement->execute();
+        $this->sql->exchangeArray($data)->save();
 
         return $new_link;
     }
@@ -92,7 +83,9 @@ class IndexController extends AbstractActionController
                     $newLink = "Некорректные данные";
                 }
             } catch (\Exception $e) {
-
+                echo "<pre>";
+                print_r($e->getMessage());
+                die("***DIE***");
             }
             echo $newLink;
             die();

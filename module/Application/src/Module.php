@@ -7,9 +7,11 @@
 
 namespace Application;
 
+use Application\Model\Links;
 use Interop\Container\ContainerInterface;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Sql\Sql;
+use Zend\Log\Logger;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 
@@ -32,9 +34,17 @@ class Module implements ConfigProviderInterface
                     /**
                      * @var  ContainerInterface $container
                      */
+//                    $adapter = $container->get(AdapterInterface::class);
+//                    $sql = new Sql($adapter);
+//                    return new Controller\IndexController($sql);
+
                     $adapter = $container->get(AdapterInterface::class);
-                    $sql = new Sql($adapter);
-                    return new Controller\IndexController($sql);
+                    $logger = $container->get(Logger::class);
+                    $isDebug = ($container->get('config'))['isDebug'];
+
+                    $model = new Links($adapter, $logger, $isDebug);
+
+                    return new Controller\IndexController($model);
                 },
                 Controller\AdminController::class => function ($container) {
                     /**
@@ -43,6 +53,15 @@ class Module implements ConfigProviderInterface
                     $adapter = $container->get(AdapterInterface::class);
                     $sql = new Sql($adapter);
                     return new Controller\AdminController($sql);
+                },
+
+                Controller\IgpController::class => function ($container) {
+                    /**
+                     * @var  ContainerInterface $container
+                     */
+                    $adapter = $container->get(AdapterInterface::class);
+                    $sql = new Sql($adapter);
+                    return new Controller\IgpController($sql);
                 }
             ]
         ];

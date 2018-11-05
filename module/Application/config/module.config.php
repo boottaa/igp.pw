@@ -30,6 +30,20 @@ return [
                     ],
                 ],
             ],
+            'igp' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/igp[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\IgpController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'admin' => [
                 'type' => Segment::class,
                 'options' => [

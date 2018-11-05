@@ -15,6 +15,7 @@ use Zend\Log\Writer\Stream;
 
 return [
     'isDebug' => true,
+    'root_dir' => (__DIR__).'/../../',
 	'db' => [
 		'driver'         => 'Pdo',
 		'dsn'            => 'mysql:dbname=igp;host=localhost',
