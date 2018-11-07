@@ -6,9 +6,11 @@ return [
 	'Zend\\Validator',
 //    'Zend\\Di',
     'Zend\\Log',
+    'Zend\\Navigation',
 //    'Zend\\Cache',
 
 	'Application',
+    'Auth',
 ];
 
 ?>

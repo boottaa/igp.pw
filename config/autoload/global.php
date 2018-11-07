@@ -26,6 +26,8 @@ return [
 		],
 	],
 
+    'navigation' => require __DIR__ . '/navigation.php',
+
     'log' => [
         'writers' => [
             //Можем добавить несколько стримов.

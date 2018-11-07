@@ -33,7 +33,7 @@ return [
             'igp' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/igp[/:action][/:id]',
+                    'route'    => '/_igp[/:action][/:id]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -68,6 +68,8 @@ return [
         'exception_template'       => 'error/index',
         'base_path'                =>  $protocol.$_SERVER['HTTP_HOST'].'/style',
         'template_map' => [
+            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/admin'            => __DIR__ . '/../view/layout/admin.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',

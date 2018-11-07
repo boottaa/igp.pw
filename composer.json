@@ -15,11 +15,13 @@
         "zendframework/zend-json-server": "^3.0",
         "zendframework/zend-paginator": "^2.8",
         "zendframework/zend-inputfilter": "^2.8",
-        "zendframework/zend-log": "^2.9"
+        "zendframework/zend-log": "^2.9",
+        "zendframework/zend-navigation": "^2.9"
     },
     "autoload": {
       "psr-4": {
-          "Application\\": "module/Application/src/"
+          "Application\\": "module/Application/src/",
+          "Auth\\": "module/Auth/src/"
       }
     }
 }

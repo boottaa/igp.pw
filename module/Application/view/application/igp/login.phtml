@@ -1,12 +1,26 @@
 <div class="container" style="max-width: 500px; min-width: 250px;">
+    <?php if($error == 'on'): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> Incorrect email or password.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <?php endif; ?>
 
-    <form class="form-signin">
+    <form class="form-signin" action="<?= $this->url('auth') ?>" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+        <input type="email" name="login_email" style="border-bottom-left-radius: 0px; border-bottom-right-radius: 0px;" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" style="border-radius: 0px; border-top: 0px" id="inputPassword" class="form-control" placeholder="Password" required="">
+        <input type="password" name="login_password" style="border-radius: 0px; border-top: 0px" id="inputPassword" class="form-control" placeholder="Password" required="">
         <button class="btn btn-lg btn-success btn-block" style="border-top-left-radius: 0px; border-top-right-radius: 0px;" type="submit">Sign in</button>
     </form>
-
+    <br />
+    <p>
+        <a href="<?= $this->url('igp', ['action' => 'registration'])?>">Create your personal account</a>
+    </p>
+    <p>
+        <a href="#">Forgot your password?</a>
+    </p>
 </div>

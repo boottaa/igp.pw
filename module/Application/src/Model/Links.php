@@ -41,6 +41,13 @@ class Links extends Base
                 ),
             ));
             $inputFilter->add(array(
+                'name'     => 'is_deleted',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'Int'),
+                ),
+            ));
+            $inputFilter->add(array(
                 'name'     => 'source',
                 'required' => false,
                 'filters'  => array(

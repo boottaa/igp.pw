@@ -7,28 +7,25 @@
 
 namespace Application\Controller;
 
-use Zend\Db\Sql\Sql;
+use Application\Model\Base;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class IgpController extends AbstractActionController
 {
     private $sql;
 
-    function __construct(Sql $sql)
+    function __construct(Base $sql)
     {
         $this->sql = $sql;
     }
 
     private function getLinks($where){
-        $sql = $this->sql;
-        $select = $sql->select('links');
-        $select->where($where)->order('date_time DESC');;
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $r = $statement->execute();
-        return $r;
+        try{
+            return $this->sql->fetchAll($where);
+        }catch (\Exception $e){
+            return null;
+        }
     }
 
 
@@ -52,6 +49,12 @@ class IgpController extends AbstractActionController
     }
 
     public function loginAction()
+    {
+        $error = $this->params()->fromQuery('error', null);
+        return new ViewModel(['error' => $error]);
+    }
+
+    public function registrationAction()
     {
         return new ViewModel();
     }
