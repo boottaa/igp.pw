@@ -26,21 +26,6 @@ class Session
         $this->user_id = $id;
     }
 
-    private function getReallIpAddr()
-    {
-        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
-        {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
-        {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
-        return $ip;
-    }
-
     public function start()
     {
         session_start();
@@ -53,7 +38,7 @@ class Session
         $data = [
             'user_id' => $this->user_id,
             'session' => $session_id,
-            'ip' => $this->getReallIpAddr()
+            'ip' => UserInfo::getReallIpAddr()
         ];
 
         $this->model->insert($data);
@@ -63,7 +48,7 @@ class Session
 
     public function end()
     {
-        $this->model->delete(['session' => session_id(), 'ip' => $this->getReallIpAddr()]);
+        $this->model->delete(['session' => session_id(), 'ip' => UserInfo::getReallIpAddr()]);
     }
 
     public function checkSession()
@@ -71,7 +56,7 @@ class Session
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $session = $this->model->select(['session' => session_id(), 'ip' => $this->getReallIpAddr()])->current();
+        $session = $this->model->select(['session' => session_id(), 'ip' =>  UserInfo::getReallIpAddr()])->current();
         if(!empty($session)){
             session_id($session['session']);
 

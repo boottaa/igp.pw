@@ -9,7 +9,6 @@ namespace Application\Controller;
 
 use Application\Model\Base;
 use Auth\Helpers\Session;
-use Zend\Db\Sql\Sql;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
@@ -37,7 +36,7 @@ class AdminController extends AbstractActionController
 
     public function indexAction()
     {
-
+        //https://www.10bestdesign.com/jqvmap/
         return new ViewModel();
     }
 }

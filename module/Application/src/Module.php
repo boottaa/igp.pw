@@ -7,6 +7,7 @@
 
 namespace Application;
 
+use Application\Model\FollowLinks;
 use Application\Model\Links;
 use Auth\Helpers\Session;
 use Interop\Container\ContainerInterface;
@@ -57,6 +58,7 @@ class Module implements ConfigProviderInterface
                         $navigation = $container->get(Navigation::class);
                         $navigation->findOneBy('label', 'Login')->set('visible', false);
                         $navigation->findOneBy('label', 'Admin')->set('visible', true);
+                        $navigation->findOneBy('label', 'Logout')->set('visible', true);
                     }
                 }
             ],
@@ -66,17 +68,15 @@ class Module implements ConfigProviderInterface
                     /**
                      * @var  ContainerInterface $container
                      */
-//                    $adapter = $container->get(AdapterInterface::class);
-//                    $sql = new Sql($adapter);
-//                    return new Controller\IndexController($sql);
 
                     $adapter = $container->get(AdapterInterface::class);
                     $logger = $container->get(Logger::class);
                     $isDebug = ($container->get('config'))['isDebug'];
 
-                    $model = new Links($adapter, $logger, $isDebug);
+                    $modelLinks = new Links($adapter, $logger, $isDebug);
+                    $modelFollowLinks = new FollowLinks($adapter, $logger, $isDebug);
 
-                    return new Controller\IndexController($model);
+                    return new Controller\IndexController($modelLinks, $modelFollowLinks);
                 },
                 Controller\AdminController::class => function ($container) {
                     /**
