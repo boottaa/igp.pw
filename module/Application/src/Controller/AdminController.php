@@ -7,26 +7,18 @@
 
 namespace Application\Controller;
 
-use Application\Model\Base;
+use Application\Model\FollowLinks;
+use Application\Model\Links;
 use Auth\Helpers\Session;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
-class AdminController extends AbstractActionController
+class AdminController extends BaseController
 {
-    private $model;
-    private $session;
-
-    function __construct(Base $model, Session $session)
-    {
-        $this->model = $model;
-        $this->session = $session;
-    }
-
     public function onDispatch(MvcEvent $e)
     {
-        if(!$this->session->checkSession()){
+        if($this->getUserId() == 0){
             return $this->redirect()->toRoute('igp', ['action' => 'login']);
         }
         $this->layout()->setTemplate('layout/admin');
@@ -36,7 +28,36 @@ class AdminController extends AbstractActionController
 
     public function indexAction()
     {
+
+        $userId = $this->getUserId();
+        $fl = iterator_to_array($this->followLinks->getCount($userId));
+        $colors = '';
+        if(!empty($fl)){
+            foreach ($fl as $item){
+                if($item['count'] > 0 ){
+                    $green = 255 - $item['count'] * 2;
+                    if($green < 100) $green = 100;
+                    $colors .= $item['code_region'].": ". "'rgb(0, {$green}, 58)', ";
+                }
+            }
+        }
+
+        $flTable = iterator_to_array($this->links->followLinks()->getFollowLinks($userId));
+        $totalLinks = $this->links->countUserLinks($userId)['c'];
         //https://www.10bestdesign.com/jqvmap/
-        return new ViewModel();
+        return new ViewModel(["colorMap" => $colors, "fl_table" => $flTable, "totalLinks" => $totalLinks]);
+    }
+
+    public function activityAction()
+    {
+        $userId = $this->getUserId();
+
+        $data = [];
+        foreach ($this->links->followLinks()->getForTableActivity($userId) as $item){
+            $data[] = [$item['date'], (int) $item['count']];
+        };
+        
+        echo json_encode($data, JSON_UNESCAPED_SLASHES);
+        die();
     }
 }

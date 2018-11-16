@@ -7,10 +7,14 @@
  */
 namespace Application\Model;
 
+use Zend\Db\Adapter\AdapterInterface;
 use Zend\InputFilter\InputFilter;
+use Zend\Log\LoggerInterface;
 
 class Links extends Base
 {
+
+    private $followLinks;
     protected $table = 'links';
 
     protected $data = [
@@ -20,6 +24,24 @@ class Links extends Base
         'new' => null,
         'date_time' => null
     ];
+
+    public function __construct(AdapterInterface $dbAdapter, LoggerInterface $logger, $isDebug = false)
+    {
+        $this->followLinks = new FollowLinks($dbAdapter, $logger, $isDebug);
+        parent::__construct($dbAdapter, $logger, $isDebug);
+    }
+
+    public function followLinks()
+    {
+        return $this->followLinks;
+    }
+
+    public function countUserLinks($user_id = 0)
+    {
+        $sql = "SELECT count(*) as c FROM  links WHERE user_id={$user_id}";
+
+        return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql)->current();
+    }
 
     public function getInputFilter()
     {

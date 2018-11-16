@@ -75,8 +75,9 @@ class Module implements ConfigProviderInterface
 
                     $modelLinks = new Links($adapter, $logger, $isDebug);
                     $modelFollowLinks = new FollowLinks($adapter, $logger, $isDebug);
+                    $session = ($container->get(Session::class));
 
-                    return new Controller\IndexController($modelLinks, $modelFollowLinks);
+                    return new Controller\IndexController($modelLinks, $session);
                 },
                 Controller\AdminController::class => function ($container) {
                     /**
@@ -87,10 +88,9 @@ class Module implements ConfigProviderInterface
                     $isDebug = ($container->get('config'))['isDebug'];
 
                     $session = ($container->get(Session::class));
-                    $model = new Links($adapter, $logger, $isDebug);
+                    $followLinks = new Links($adapter, $logger, $isDebug);
 
-
-                    return new Controller\AdminController($model, $session);
+                    return new Controller\AdminController($followLinks, $session);
                 },
 
                 Controller\IgpController::class => function ($container) {

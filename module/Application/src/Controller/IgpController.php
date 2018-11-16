@@ -11,18 +11,12 @@ use Application\Model\Base;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class IgpController extends AbstractActionController
+class IgpController extends BaseController
 {
-    private $sql;
-
-    function __construct(Base $sql)
-    {
-        $this->sql = $sql;
-    }
 
     private function getLinks($where){
         try{
-            return $this->sql->fetchAll($where);
+            return $this->links->fetchAll($where);
         }catch (\Exception $e){
             return null;
         }
@@ -37,7 +31,7 @@ class IgpController extends AbstractActionController
 
     public function historyAction()
     {
-        $items = iterator_to_array($this->getLinks(['user_id' => '0']));
+        $items = iterator_to_array($this->getLinks(['user_id' => $this->getUserId()]));
 
         array_walk($items, function (&$item) {
             $item['date_time'] = date('d.m.Y', strtotime($item['date_time']));

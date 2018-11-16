@@ -49,33 +49,25 @@ return [
 
     ],
 
-    'admin' => [
+    'admin_links' => [
         [
             //Информация по ссылкам (колечество переходов, интерактивная карта и количество переходов с разных стран и городов)
 
             'label' => 'Dashboard',
+            'icon' => 'menu-icon icon-dashboard',
             'route' => 'home',
             'class' => 'nav-link',
         ],
         [
-            'label' => 'About IGP',
-            'route' => 'igp',
+            'label' => 'Generate link',
+            'route' => 'home',
             'class' => 'nav-link',
-            'action' => 'about'
         ],
         [
-            'label' => 'History',
+            'label' => 'My links',
             'route' => 'igp',
             'class' => 'nav-link',
             'action' => 'history'
         ],
-        [
-            'label' => 'Login',
-            'route' => 'igp',
-            'class' => 'nav-link nav-login',
-            'action' => 'login',
-            'visible' => true
-        ],
-
     ],
 ];

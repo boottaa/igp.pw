@@ -8,6 +8,7 @@
 namespace Application\Model;
 
 use Zend\InputFilter\InputFilter;
+use Zend\Paginator\Paginator;
 
 class FollowLinks extends Base
 {
@@ -22,6 +23,7 @@ class FollowLinks extends Base
         'count' => '0',
         'user_agent' => null,
         'is_mobile' => '0',
+        'code_region' => null,
     ];
 
     public function getInputFilter()
@@ -110,5 +112,34 @@ class FollowLinks extends Base
         }
 
         return $this->inputFilter;
+    }
+
+
+    public function getFollowLinks($user_id = 0, $limit = 100)
+    {
+        $sql = "SELECT fl.* FROM igp.follow_links fl
+        JOIN igp.links l ON fl.link_id = l.id 
+        WHERE l.user_id = {$user_id} LIMIT 100";
+
+        return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql);
+    }
+
+    public function getCount($user_id = 0)
+    {
+        $sql = "SELECT fl.code_region, (count(*) + SUM(fl.count)) as count FROM igp.follow_links fl
+        JOIN igp.links l ON fl.link_id = l.id 
+        WHERE l.user_id = {$user_id}
+        group by fl.code_region";
+
+        return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql);
+    }
+
+    public function getForTableActivity($user_id = 0){
+        $sql = "SELECT DATE_FORMAT(fl.date_time, '%Y/%m/%e') as date, (count(*) + SUM(fl.count)) as count FROM igp.follow_links fl
+        JOIN igp.links l ON fl.link_id = l.id 
+        WHERE l.user_id = {$user_id}
+        group by date";
+
+        return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql);
     }
 }

@@ -9,30 +9,18 @@ namespace Application\Controller;
 
 use Application\Model\Base;
 use Auth\Helpers\IPAPI;
+use Auth\Helpers\Session;
 use Auth\Helpers\UserInfo;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class IndexController extends AbstractActionController
+class IndexController extends BaseController
 {
-    /**
-     * @var Base $links
-     * @var Base $followLinks
-     */
-    private $links;
-    private $followLinks;
     private $salt = 0;
     private $limit = 2;
 
-    function __construct(Base $modelLinks, Base $modelFollowLinks)
-    {
-        $this->links = $modelLinks;
-        $this->followLinks = $modelFollowLinks;
-    }
-
     private function getLink($new){
         try{
-            return $this->links->getOnly(['new' => $new]);
+            return $this->links->getOnly(['new' => $new ]);
         }catch (\Exception $e){
             return null;
         }
@@ -40,27 +28,27 @@ class IndexController extends AbstractActionController
 
     private function getNewLinck(string $source): string
     {
-        $source = urlencode($source);
         $new_link = substr(md5($source.$this->salt), 0, $this->limit);
         $checkExistsLink = $this->getLink($new_link);
-        
+
         if(!empty($checkExistsLink)){
             //Если существует то возврощаем ее
-            if($checkExistsLink['source'] == $source){
+
+            if($checkExistsLink['source'] == urlencode($source) && $checkExistsLink['user_id'] == $this->getUserId()){
                 return $checkExistsLink['new'];
             }
-
             if ($this->salt <= $this->limit * 5) {
                 $this->salt++;
             } elseif ($this->salt > $this->limit * 5) {
                 $this->salt = 0;
                 $this->limit++;
             }
-            $new_link = $this->getNewLinck($source);
+            return $this->getNewLinck($source);
         }
 
         $data = [
-            'source' => $source,
+            'user_id' => $this->getUserId(),
+            'source' => urlencode($source),
             "new" => $new_link,
         ];
 
@@ -93,6 +81,7 @@ class IndexController extends AbstractActionController
                         'user_ip'  => $user_ip,
                         'country' => $ipapi->country,
                         'city' => $ipapi->city,
+                        'code_region' => mb_strtolower($ipapi->countryCode),
                         'date_time' => null,
                         'count' => '0',
                         'user_agent' => $useragent,

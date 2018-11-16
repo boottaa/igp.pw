@@ -15,6 +15,7 @@ class Session
 
     private $model = null;
     private $user_id = null;
+    private $session = null;
 
     function __construct(TableGateway $tableGateway)
     {
@@ -40,15 +41,27 @@ class Session
             'session' => $session_id,
             'ip' => UserInfo::getReallIpAddr()
         ];
-
         $this->model->insert($data);
-
+        
         return $session_id;
     }
 
     public function end()
     {
+        $this->session = null;
         $this->model->delete(['session' => session_id(), 'ip' => UserInfo::getReallIpAddr()]);
+    }
+
+    public function getUserSession(){
+        if(empty($this->session)){
+            $this->session = $this->model->select(['session' => session_id(), 'ip' =>  UserInfo::getReallIpAddr()])->current();
+
+            if(empty($this->session)){
+                return false;
+            }
+        }
+
+        return $this->session;
     }
 
     public function checkSession()
@@ -56,10 +69,10 @@ class Session
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $session = $this->model->select(['session' => session_id(), 'ip' =>  UserInfo::getReallIpAddr()])->current();
-        if(!empty($session)){
-            session_id($session['session']);
+        $session = $this->getUserSession();
 
+        if($session){
+            session_id($session['session']);
             return true;
         }
         return false;
