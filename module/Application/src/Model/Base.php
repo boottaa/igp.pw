@@ -98,6 +98,12 @@ abstract class Base
         return $paginator;
     }
 
+    /**
+     * @param array $where
+     *
+     * @return array|\ArrayObject|null
+     * @throws \Exception
+     */
     public function getOnly(array $where)
     {
         $rowset = $this->tableGateway->select($where);

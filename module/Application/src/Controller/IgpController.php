@@ -13,33 +13,14 @@ use Zend\View\Model\ViewModel;
 
 class IgpController extends BaseController
 {
-
-    private function getLinks($where){
-        try{
-            return $this->links->fetchAll($where);
-        }catch (\Exception $e){
-            return null;
-        }
-    }
-
-
-
-    public function aboutAction()
+    public function newsAction()
     {
         return new ViewModel();
     }
 
-    public function historyAction()
+    public function aboutAction()
     {
-        $items = iterator_to_array($this->getLinks(['user_id' => $this->getUserId()]));
-
-        array_walk($items, function (&$item) {
-            $item['date_time'] = date('d.m.Y', strtotime($item['date_time']));
-            $item['source'] = urldecode($item['source']);
-            $item['new'] = "https://" . $_SERVER['HTTP_HOST'] . "/" . $item['new'];
-        });
-
-        return new ViewModel(['items' => $items]);
+        return new ViewModel();
     }
 
     public function loginAction()

@@ -32,9 +32,12 @@ class IndexController extends BaseController
         $checkExistsLink = $this->getLink($new_link);
 
         if(!empty($checkExistsLink)){
-            //Если существует то возврощаем ее
-
+            //Если существует то востанавливаем и возврощаем ее
             if($checkExistsLink['source'] == urlencode($source) && $checkExistsLink['user_id'] == $this->getUserId()){
+                if($checkExistsLink['is_deleted'] != '0'){
+                    $checkExistsLink['is_deleted'] = '0';
+                    $this->links->exchangeArray(iterator_to_array($checkExistsLink))->save();
+                }
                 return $checkExistsLink['new'];
             }
             if ($this->salt <= $this->limit * 5) {
@@ -49,12 +52,32 @@ class IndexController extends BaseController
         $data = [
             'user_id' => $this->getUserId(),
             'source' => urlencode($source),
-            "new" => $new_link,
+            'new' => $new_link,
+            'is_deleted' => '0'
         ];
 
         $this->links->exchangeArray($data)->save();
 
         return $new_link;
+    }
+
+    public function getHistorys()
+    {
+        $userId = $this->getUserId();
+        if ($userId != 0) {
+            try {
+                $items = iterator_to_array($this->links->fetchAll(['user_id' => $userId]));
+                array_walk($items, function (&$item) use ($userId) {
+                    $item['date_time'] = date('d.m.Y', strtotime($item['date_time']));
+                    $item['source'] = urldecode($item['source']);
+                    $item['new'] = "https://" . $_SERVER['HTTP_HOST'] . "/" . $item['new'];
+                    $item['activity'] = $this->followLinks->getForTableActivity($userId, $item['id']);
+                });
+                return $items;
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
     }
 
     public function indexAction()
@@ -117,6 +140,9 @@ class IndexController extends BaseController
 
         $this->layout()->setVariable("newlink", $newLink ?? '');
 
-        return new ViewModel();
+        return new ViewModel(["historys" =>  $this->getHistorys()]);
     }
+
+
+
 }

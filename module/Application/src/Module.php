@@ -68,13 +68,10 @@ class Module implements ConfigProviderInterface
                     /**
                      * @var  ContainerInterface $container
                      */
-
                     $adapter = $container->get(AdapterInterface::class);
                     $logger = $container->get(Logger::class);
                     $isDebug = ($container->get('config'))['isDebug'];
-
                     $modelLinks = new Links($adapter, $logger, $isDebug);
-                    $modelFollowLinks = new FollowLinks($adapter, $logger, $isDebug);
                     $session = ($container->get(Session::class));
 
                     return new Controller\IndexController($modelLinks, $session);
@@ -86,26 +83,23 @@ class Module implements ConfigProviderInterface
                     $adapter = $container->get(AdapterInterface::class);
                     $logger = $container->get(Logger::class);
                     $isDebug = ($container->get('config'))['isDebug'];
-
                     $session = ($container->get(Session::class));
-                    $followLinks = new Links($adapter, $logger, $isDebug);
+                    $modelLinks = new Links($adapter, $logger, $isDebug);
 
-                    return new Controller\AdminController($followLinks, $session);
+                    return new Controller\AdminController($modelLinks, $session);
                 },
 
                 Controller\IgpController::class => function ($container) {
                     /**
                      * @var  ContainerInterface $container
-                     * @var Navigation $navigation
                      */
-                    
                     $adapter = $container->get(AdapterInterface::class);
                     $logger = $container->get(Logger::class);
                     $isDebug = ($container->get('config'))['isDebug'];
+                    $modelLinks = new Links($adapter, $logger, $isDebug);
+                    $session = ($container->get(Session::class));
 
-                    $model = new Links($adapter, $logger, $isDebug);
-
-                    return new Controller\IgpController($model);
+                    return new Controller\IgpController($modelLinks, $session);
                 }
             ]
         ];

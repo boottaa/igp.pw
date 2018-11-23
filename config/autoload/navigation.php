@@ -21,10 +21,10 @@ return [
             'action' => 'about'
         ],
         [
-            'label' => 'History',
+            'label' => 'News',
             'route' => 'igp',
             'class' => 'nav-link',
-            'action' => 'history'
+            'action' => 'news'
         ],
         [
             'label' => 'Login',
@@ -46,7 +46,6 @@ return [
             'action' => 'logout',
             'visible' => false
         ],
-
     ],
 
     'admin_links' => [
@@ -55,19 +54,21 @@ return [
 
             'label' => 'Dashboard',
             'icon' => 'menu-icon icon-dashboard',
-            'route' => 'home',
+            'route' => 'admin',
             'class' => 'nav-link',
         ],
-        [
-            'label' => 'Generate link',
-            'route' => 'home',
-            'class' => 'nav-link',
-        ],
+
         [
             'label' => 'My links',
-            'route' => 'igp',
+            'route' => 'admin',
             'class' => 'nav-link',
-            'action' => 'history'
+            'action' => 'mylinks',
+        ],
+        [
+            'label' => 'Portfolio',
+            'route' => 'admin',
+            'class' => 'nav-link',
+            'action' => 'portfolio',
         ],
     ],
 ];

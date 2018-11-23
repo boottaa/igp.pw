@@ -134,10 +134,15 @@ class FollowLinks extends Base
         return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql);
     }
 
-    public function getForTableActivity($user_id = 0){
+    public function getForTableActivity($user_id = 0, $link_id = 0){
+        $where = '';
+        if($link_id > 0){
+            $where = 'AND l.id='.$link_id;
+        }
+
         $sql = "SELECT DATE_FORMAT(fl.date_time, '%Y/%m/%e') as date, (count(*) + SUM(fl.count)) as count FROM igp.follow_links fl
         JOIN igp.links l ON fl.link_id = l.id 
-        WHERE l.user_id = {$user_id}
+        WHERE l.user_id = {$user_id} {$where}
         group by date";
 
         return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql);

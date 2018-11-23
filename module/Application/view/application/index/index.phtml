@@ -2,9 +2,9 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
             <form id="formgenerate" class="card card-sm" method="post">
-                <?php if(!empty($newlink)): ?>
+                <?php if (!empty($newlink)): ?>
                     <div class="input-group card-body row no-gutters align-items-center">
-                        <?=$newlink ?>
+                        <?= $newlink ?>
                     </div>
                 <?php endif; ?>
                 <div class="input-group card-body row no-gutters align-items-center">
@@ -24,14 +24,20 @@
         </div>
         <!--end of col-->
     </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <?php include __DIR__.'/../admin/mod_history.phtml' ?>
+        </div>
+    </div>
 </div>
 <script>
-    $(function(){
-
+    $(function () {
         var form = {
-            body: $( "#formgenerate" ),
-            button: $( "#buttongenerate" ),
-            input: $( "#inputsource" )
+            body: $("#formgenerate"),
+            button: $("#buttongenerate"),
+            input: $("#inputsource")
         };
 
         var label = {
@@ -40,8 +46,8 @@
         };
 
         var action = {
-            clear: function(){
-                if(form.button.text() === label.clear) {
+            clear: function () {
+                if (form.button.text() === label.clear) {
                     form.input.val("");
                     form.button.text(label.gener);
                     form.button.addClass("btn-success");
@@ -52,9 +58,9 @@
 
                 return false;
             },
-            gener: function( success ){
-                if(form.button.text() === label.gener) {
-                    form.input.val( success);
+            gener: function (success) {
+                if (form.button.text() === label.gener) {
+                    form.input.val(success);
                     form.button.text(label.clear);
                     form.button.addClass("btn-danger");
                     form.button.removeClass("btn-success");
@@ -62,36 +68,36 @@
             }
         };
 
-        form.input.keyup( function(){
+        form.input.keyup(function () {
             action.clear();
         });
 
 
         var debug = false;
-        if ( !debug ) {
-            form.body.on( "submit", function( event ) {
+        if (!debug) {
+            form.body.on("submit", function (event) {
                 event.preventDefault();
 
-                if(form.input.val() === ""){
-                    form.input.attr("placeholder", "https://exemple.com" + label.gener);
+                if (form.input.val() === "") {
+                    form.input.attr("placeholder", "Please enter a valid link: https://exemple.com");
 
                     return false;
                 }
 
-                if(!action.clear()){
+                if (!action.clear()) {
                     $.ajax({
                         type: "POST",
                         url: '/',
                         cache: false,
                         async: false,
-                        data: $( this ).serialize(),
-                        success: function( success ){
-                            form.input.val( success );
+                        data: $(this).serialize(),
+                        success: function (success) {
+                            form.input.val(success);
                             form.button.text(label.clear);
                             form.button.addClass("btn-danger");
                             form.button.removeClass("btn-success");
                         }
-                    }).done(function(){
+                    }).done(function () {
                         var copyText = document.getElementById("inputsource");
                         /* Select the text field */
                         copyText.select();

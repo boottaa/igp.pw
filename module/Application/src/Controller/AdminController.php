@@ -28,7 +28,6 @@ class AdminController extends BaseController
 
     public function indexAction()
     {
-
         $userId = $this->getUserId();
         $fl = iterator_to_array($this->followLinks->getCount($userId));
         $colors = '';
@@ -48,16 +47,77 @@ class AdminController extends BaseController
         return new ViewModel(["colorMap" => $colors, "fl_table" => $flTable, "totalLinks" => $totalLinks]);
     }
 
+    public function getHistorys()
+    {
+        $userId = $this->getUserId();
+        if ($userId != 0) {
+            try {
+                $items = iterator_to_array($this->links->fetchAll(['user_id' => $userId]));
+                array_walk($items, function (&$item) use ($userId) {
+                    $item['date_time'] = date('d.m.Y', strtotime($item['date_time']));
+                    $item['source'] = urldecode($item['source']);
+                    $item['new'] = "https://" . $_SERVER['HTTP_HOST'] . "/" . $item['new'];
+                    $item['activity'] = $this->followLinks->getForTableActivity($userId, $item['id']);
+                });
+                return $items;
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+    }
+
+    public function mylinksAction(){
+        $userId = $this->getUserId();
+        $totalLinks = $this->links->countUserLinks($userId)['c'];
+
+        return new ViewModel(['historys' =>  $this->getHistorys(), 'totalLinks' => $totalLinks]);
+    }
+
+    public function portfolioAction(){
+        $userId = $this->getUserId();
+        $totalLinks = $this->links->countUserLinks($userId)['c'];
+
+        return new ViewModel(['totalLinks' => $totalLinks]);
+    }
+
+    //AXAJ
     public function activityAction()
     {
         $userId = $this->getUserId();
+        $link_id = $this->params()->fromRoute('id', 0);
 
         $data = [];
-        foreach ($this->links->followLinks()->getForTableActivity($userId) as $item){
+        foreach ($this->links->followLinks()->getForTableActivity($userId, $link_id) as $item){
             $data[] = [$item['date'], (int) $item['count']];
         };
         
         echo json_encode($data, JSON_UNESCAPED_SLASHES);
         die();
+    }
+
+    //AXAJ
+    public function deleteAction()
+    {
+        $res = false;
+        try{
+            $userId = $this->getUserId();
+            $link_id = $this->params()->fromRoute('id', 0);
+
+            $where = [
+                'id' => $link_id,
+                'user_id' => $userId,
+                'is_deleted' => '0'
+            ];
+
+            if($this->links->getOnly($where)){
+                $this->links->delete(['id' => $link_id]);
+                $this->followLinks->delete(['link_id' => $link_id]);
+
+                $res = true;
+            }
+        }catch (\Exception $e){
+
+        }
+        die($res);
     }
 }

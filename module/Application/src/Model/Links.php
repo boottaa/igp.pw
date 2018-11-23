@@ -38,7 +38,7 @@ class Links extends Base
 
     public function countUserLinks($user_id = 0)
     {
-        $sql = "SELECT count(*) as c FROM  links WHERE user_id={$user_id}";
+        $sql = "SELECT count(*) as c FROM  links WHERE is_deleted='0' AND user_id={$user_id}";
 
         return $this->tableGateway->getAdapter()->driver->getConnection()->execute($sql)->current();
     }

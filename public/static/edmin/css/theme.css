@@ -6,12 +6,6 @@ All Rights Reserved.
 
 */
 
-body {
-	font-size: 13px;
-	font-family: 'Open Sans', Arial, sans-serif;
-	background: #fff;
-	color: #777
-}
 h1, h2, h3, h4, h5, h6 {
 	color: #333;
 	margin-top: 0
@@ -43,9 +37,6 @@ strong, b {
 }
 a:hover, a:focus {
 	outline: 0
-}
-small, .small {
-	font-size: 11px
 }
 pre, code {
 	padding: 1px 2px;
